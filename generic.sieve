@@ -19,7 +19,7 @@ if anyof(
       "*your payment*declined*"
     ],
     header :comparator "i;ascii-casemap" :regex "subject" [
-      "your secure code is [0-9]{4,}",
+      "your .* code is [0-9]{4,}",
       "your.*password.*has been (chang|updat)ed",
       "password.*reset.*request",
       "your.*password.*was reset",
@@ -28,10 +28,13 @@ if anyof(
       "^sign[- ]in to",
       "(new|suspicious).*[^[:alpha:]](log[- ]?|sign[- ])in",
       "code.*(log|sign)[- ]?in",
-      "verification.*code",
       "confirmation code: [[:alnum:]]{3}-[[:alnum:]]{3}",
       "verify your email",
-      "access.*new.*computer"
+      "access.*new.*computer",
+      "two[- ]?factor.*(code|authentication|enabled)",
+      "(recovery|backup).*code",
+      "(security|sign[- ]?in|login|otp|verification|authentication).*code",
+      "(unusual|new).*sign[- ]?in"
     ]
 ) {
   fileinto "Notifications, temp";
@@ -76,7 +79,8 @@ if allof(
     ),
     not header :comparator "i;ascii-casemap" :regex "subject" [
       "baggage receipt",
-      "in order (to|for)"
+      "in order (to|for)",
+      "tickets?|festival|concert"
     ]
 ) {
   fileinto "Finance/Purchases, receipts";
@@ -115,6 +119,10 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
     "(book(ing|ed)|reservation).*(appointment|confirmed|reference)",
     "(appointment|class).*(scheduled|booked)",
     "your ticket(.*for|s are here)",
+    "order (confirmation|confirmed).*(tickets?|event)",
+    "tickets? (for|to) .*",
+    "event.*reminder",
+    "(new|upcoming|just added).*event",
     "departure.*gate.*flight.*to",
     "baggage.*available.*pickup.*in"
 ] {
@@ -134,3 +142,29 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
 }
 
 # ========================= Promo =========================
+
+if anyof(
+    header :comparator "i;ascii-casemap" :regex "subject" [
+      "black friday",
+      "cyber monday",
+      "prime day",
+      "[0-9]+% off",
+      "(save|deal|deals) (now|today|up to|big|huge)",
+      "clearance",
+      "coupon",
+      "promo code",
+      "(flash|big|huge|mid[- ]?season|seasonal|summer|winter|boxing day) sale",
+      "on sale",
+      "special offer"
+    ],
+    not header :comparator "i;ascii-casemap" :regex "subject" [
+      "receipt",
+      "invoice",
+      "order confirm",
+      "payment received",
+      "confirmation"
+    ]
+) {
+  fileinto "Promo";
+  return;
+}
