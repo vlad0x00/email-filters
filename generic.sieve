@@ -80,7 +80,15 @@ if allof(
     not header :comparator "i;ascii-casemap" :regex "subject" [
       "baggage receipt",
       "in order (to|for)",
-      "tickets?|festival|concert"
+      "tickets?|festival|concert",
+      "[0-9]+% off",
+      "black friday",
+      "cyber monday",
+      "clearance sale",
+      "coupon",
+      "boxing day sale",
+      "savings alert",
+      "off your (first|next)"
     ]
 ) {
   fileinto "Finance/Purchases, receipts";
@@ -150,7 +158,7 @@ if anyof(
       "prime day",
       "[0-9]+% off",
       "(save|deal|deals) (now|today|up to|big|huge)",
-      "clearance",
+      "clearance sale",
       "coupon",
       "promo code",
       "(flash|big|huge|mid[- ]?season|seasonal|summer|winter|boxing day) sale",
