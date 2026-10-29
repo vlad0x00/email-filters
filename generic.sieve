@@ -20,9 +20,8 @@ if anyof(
     ],
     header :comparator "i;ascii-casemap" :regex "subject" [
       "your .* code is [0-9]{4,}",
-      "your.*password.*has been (chang|updat)ed",
+      "your.*password.*(has been (chang|updat)ed|was reset)",
       "password.*reset.*request",
-      "your.*password.*was reset",
       "(reset|forg[oe]t).*password",
       "(log|sign)[- ]?in.*code",
       "^sign[- ]in to",
@@ -32,9 +31,15 @@ if anyof(
       "verify your email",
       "access.*new.*computer",
       "two[- ]?factor.*(code|authentication|enabled)",
-      "(recovery|backup).*code",
-      "(security|sign[- ]?in|login|otp|verification|authentication).*code",
-      "(unusual|new).*sign[- ]?in"
+      "(security|sign[- ]?in|login|otp|verification|authentication|recovery|backup).*code",
+      "(unusual|new).*sign[- ]?in",
+      "personal access token",
+      "login link",
+      "verify your account",
+      "password reset confirmation",
+      "(registration|confirmation).*password",
+      "authorization code",
+      "update.*password"
     ]
 ) {
   fileinto "Notifications, temp";
@@ -72,9 +77,10 @@ if allof(
         "(order|purchase).*(confirm|placed|update|shipped|#)",
         "your.*(order|purchase)",
         "payment.*(receipt|received)",
-        "(package|parcel|shipment).*on (its|the) way",
-        "(package|parcel|shipment).*deliver(y|ed)",
-        "we have your (package|parcel|shipment)"
+        "(package|parcel|shipment|delivery).*(on (its|the) way|deliver(y|ed)|scheduled|update|ready for pickup|cleared customs|import fees? due|in your (country|region)|at carrier|out for delivery|arriv(ing|ed))",
+        "we have your (package|parcel|shipment)",
+        "(your|the) invoice (from|for|is|#|available)",
+        "attempted to deliver a package"
       ]
     ),
     not header :comparator "i;ascii-casemap" :regex "subject" [
@@ -101,13 +107,25 @@ if allof(
 
 # ========================= Employment/Alerts, listings =======================
 
+if header :comparator "i;ascii-casemap" :regex "subject" [
+    "is hiring for",
+    ".+ is hiring$",
+    "job alert",
+    "jobs alert",
+    "open jobs",
+    "see who's hiring",
+    "sees who's hiring",
+    "jobs you may be interested"
+] {
+  fileinto "Employment/Alerts, listings";
+  return;
+}
+
 # ========================= Employment ===========================
 
 # ========================= Events, tickets, bookings/Calendar =========================
 
-if anyof(
-    exists "X-Pm-Calendar-Intent"
-) {
+if exists "X-Pm-Calendar-Intent" {
   fileinto "Events, tickets, bookings/Calendar";
   return;
 }
@@ -118,7 +136,8 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
     "check in for your (trip|flight) to",
     "(flight|trip).*ready for check[- ]?in",
     "(your|mobile) boarding pass|boarding pass(es)? for",
-    "your.*travel (information|itinerary|documents) for",
+    "itinerary\\s+for",
+    "travel\\s+(information|documents)\\s+for",
     "update to.*flight number.*for.*(trip|flight) to",
     "your flight.*(departs|arrives) at [0-9]{1,2}:[0-9]{2}",
     "your.*flight.*is now boarding",
@@ -132,7 +151,13 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
     "event.*reminder",
     "(new|upcoming|just added).*event",
     "departure.*gate.*flight.*to",
-    "baggage.*available.*pickup.*in"
+    "baggage.*available.*pickup.*in",
+    "boarding announcement",
+    "boarding passes",
+    "booking change",
+    "seat change for trip",
+    "trip document",
+    "(all set|set) for your trip"
 ] {
   fileinto "Events, tickets, bookings";
   return;
@@ -151,7 +176,7 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
 
 # ========================= Promo =========================
 
-if anyof(
+if allof(
     header :comparator "i;ascii-casemap" :regex "subject" [
       "black friday",
       "cyber monday",
