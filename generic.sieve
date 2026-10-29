@@ -39,7 +39,8 @@ if anyof(
       "password reset confirmation",
       "(registration|confirmation).*password",
       "authorization code",
-      "update.*password"
+      "update.*password",
+      "batter(y|ies).*(critical|low)"
     ]
 ) {
   fileinto "Notifications, temp";
@@ -80,7 +81,8 @@ if allof(
         "(package|parcel|shipment|delivery).*(on (its|the) way|deliver(y|ed)|scheduled|update|ready for pickup|cleared customs|import fees? due|in your (country|region)|at carrier|out for delivery|arriv(ing|ed))",
         "we have your (package|parcel|shipment)",
         "(your|the) invoice (from|for|is|#|available)",
-        "attempted to deliver a package"
+        "attempted to deliver a package",
+        "#[0-9]{4,}.*(out for delivery|has been shipped)"
       ]
     ),
     not header :comparator "i;ascii-casemap" :regex "subject" [
@@ -94,7 +96,9 @@ if allof(
       "coupon",
       "boxing day sale",
       "savings alert",
-      "off your (first|next)"
+      "off your (first|next)",
+      "save [0-9]+%",
+      "[0-9]+% on your"
     ]
 ) {
   fileinto "Finance/Purchases, receipts";
