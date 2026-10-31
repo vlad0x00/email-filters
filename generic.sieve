@@ -20,8 +20,7 @@ if anyof(
     ],
     header :comparator "i;ascii-casemap" :regex "subject" [
       "your .* code is [0-9]{4,}",
-      "your.*password.*(has been (chang|updat)ed|was reset)",
-      "password.*reset.*request",
+      "password.*(reset|changed|change|updated)",
       "(reset|forg[oe]t).*password",
       "(log|sign)[- ]?in.*code",
       "^sign[- ]in to",
@@ -39,7 +38,10 @@ if anyof(
       "password reset confirmation",
       "(registration|confirmation).*password",
       "authorization code",
+      "log[- ]?in attempt",
+      "(new device|new computer|new location).*(logged|log[- ]?in|sign[- ]?in)",
       "update.*password",
+      "appointment reminder",
       "batter(y|ies).*(critical|low)"
     ]
 ) {
@@ -50,7 +52,7 @@ if anyof(
 # ========================= Proton =========================
 
 if address :domain :regex "from" [
-    "^(.+\\.)?proton\\.me$",
+    "^[a-z0-9-]+(\\.[a-z0-9-]+)*\\.proton\\.me$",
     "^proton(mail|drive)\\.zendesk\\.com$"
 ]
 {
@@ -82,6 +84,7 @@ if allof(
         "we have your (package|parcel|shipment)",
         "(your|the) invoice (from|for|is|#|available)",
         "attempted to deliver a package",
+        "your.*no[- ]?contact delivery",
         "#[0-9]{4,}.*(out for delivery|has been shipped)"
       ]
     ),
@@ -113,6 +116,8 @@ if allof(
 
 if header :comparator "i;ascii-casemap" :regex "subject" [
     "is hiring for",
+    ".+ is hiring (a|an|for|some|the|new)",
+    "(are|now) hiring",
     ".+ is hiring$",
     "job alert",
     "jobs alert",
