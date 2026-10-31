@@ -165,7 +165,7 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
     "booking change",
     "seat change for trip",
     "trip document",
-    "(all set|set) for your trip"
+    "all set for your trip"
 ] {
   fileinto "Events, tickets, bookings";
   return;
