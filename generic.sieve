@@ -22,7 +22,6 @@ if anyof(
       "your .* code is [0-9]{4,}",
       "password.*(reset|changed|change|updated)",
       "(reset|forg[oe]t).*password",
-      "(log|sign)[- ]?in.*code",
       "^sign[- ]in to",
       "(new|suspicious).*[^[:alpha:]](log[- ]?|sign[- ])in",
       "code.*(log|sign)[- ]?in",
@@ -35,7 +34,6 @@ if anyof(
       "personal access token",
       "login link",
       "verify your account",
-      "password reset confirmation",
       "(registration|confirmation).*password",
       "authorization code",
       "log[- ]?in attempt",
@@ -115,7 +113,6 @@ if allof(
 # ========================= Employment/Alerts, listings =======================
 
 if header :comparator "i;ascii-casemap" :regex "subject" [
-    "is hiring for",
     ".+ is hiring (a|an|for|some|the|new)",
     "(are|now) hiring",
     ".+ is hiring$",
