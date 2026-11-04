@@ -39,7 +39,6 @@ if anyof(
       "log[- ]?in attempt",
       "(new device|new computer|new location).*(logged|log[- ]?in|sign[- ]?in)",
       "update.*password",
-      "appointment reminder",
       "batter(y|ies).*(critical|low)"
     ]
 ) {
@@ -154,7 +153,8 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
     "^your ticket(.*for)|your ticket(s? are here)",
     "order (confirmation|confirmed).*(tickets?|event)",
     "event.*reminder",
-    "(new|upcoming|just added)[^[:alpha:]].*event",
+    "appointment.*reminder",
+    "(registered|registration|instructions)[^[:alpha:]].*event",
     "departure.*gate.*flight.*to",
     "baggage.*available.*pickup.*in",
     "boarding announcement",
@@ -162,7 +162,10 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
     "booking change",
     "seat change for trip",
     "trip document",
-    "all set for your trip"
+    "all set for your trip",
+    "your (digital )?baggage receipt",
+    "check in (your |carry[- ]?on )?baggage",
+    "thank you for booking with us"
 ] {
   fileinto "Events, tickets, bookings";
   return;
