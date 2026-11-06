@@ -29,7 +29,7 @@ if anyof(
       "verify your email",
       "access.*new.*computer",
       "two[- ]?factor.*(code|authentication|enabled)",
-      "(security|sign[- ]?in|login|otp|verification|authentication|recovery|backup|one[- ]?time)[- ]?(password|code|pin)",
+      "(security|sign[- ]?in|login|otp|verification|authentication|recovery|backup|one[- ]?time)[- ]?(password|code|pin|passcode)",
       "(unusual|new).*sign[- ]?in",
       "personal access token",
       "login link",
@@ -139,7 +139,7 @@ if exists "X-Pm-Calendar-Intent" {
 # ========================= Events, tickets, bookings =========================
 
 if header :comparator "i;ascii-casemap" :regex "subject" [
-    "check in for your (trip|flight) to",
+    "check in for your (upcoming )?(trip|flight) to",
     "(flight|trip).*ready for check[- ]?in",
     "(your|mobile) boarding pass|boarding pass(es)? for",
     "itinerary\\s+for",
@@ -168,7 +168,7 @@ if header :comparator "i;ascii-casemap" :regex "subject" [
     "all set for your trip",
     "your (digital )?baggage receipt",
     "check in (your |carry[- ]?on )?baggage",
-    "thank you for booking with us"
+    "(thanks|thank you) for booking"
 ] {
   fileinto "Events, tickets, bookings";
   return;
